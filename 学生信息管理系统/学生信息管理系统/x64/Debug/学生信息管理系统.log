@@ -1,0 +1,10 @@
+﻿  File_stu.c
+D:\Git\Code\C_Project\学生信息管理系统\学生信息管理系统\File_stu.c(78,2): warning C4013: “memset”未定义；假设外部返回 int
+  main.c
+  menu.c
+  stu_link.c
+D:\Git\Code\C_Project\学生信息管理系统\学生信息管理系统\stu_link.c(231,18): warning C4133: “=”: 从“stu_link *”到“char *”的类型不兼容
+D:\Git\Code\C_Project\学生信息管理系统\学生信息管理系统\stu_link.c(392,20): warning C4133: “=”: 从“stu_link *”到“char *”的类型不兼容
+  正在生成代码...
+  LINK : 没有找到 D:\Git\Code\C_Project\学生信息管理系统\x64\Debug\学生信息管理系统.exe 或上一个增量链接没有生成它；正在执行完全链接
+  学生信息管理系统.vcxproj -> D:\Git\Code\C_Project\学生信息管理系统\x64\Debug\学生信息管理系统.exe
