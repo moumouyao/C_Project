@@ -1,0 +1,1 @@
+"api\led.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) TABS (2) OBJECT(.\Objects\led.obj)

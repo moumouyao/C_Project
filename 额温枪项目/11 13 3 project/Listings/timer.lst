@@ -1,0 +1,60 @@
+C51 COMPILER V9.60.0.0   TIMER                                                             11/13/2023 20:29:41 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\Objects\timer.obj
+COMPILER INVOKED BY: D:\Keil_v5\Keil_5\C51\BIN\C51.EXE api\timer.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user;.\api) DEBUG O
+                    -BJECTEXTEND PRINT(.\Listings\timer.lst) TABS(2) OBJECT(.\Objects\timer.obj)
+
+line level    source
+
+   1          #include "timer.h"
+   2          
+   3          unsigned int delay_ms[2] = {0};
+   4          
+   5          
+   6          void Delay_ms(unsigned int xus)
+   7          {
+   8   1        delay_ms[1] = xus;
+   9   1        delay_ms[0] = 0;
+  10   1        while(delay_ms[0] < delay_ms[1]);
+  11   1      
+  12   1      }
+  13          
+  14          
+  15          
+  16          //配置定时器0，周期 1ms
+  17          void Timer0Init(void)   //1毫秒@24.000MHz
+  18          {
+  19   1        AUXR |= 0x80;   //定时器时钟1T模式
+  20   1        TMOD &= 0xF0;   //设置定时器模式
+  21   1        TL0 = 0x40;   //设置定时初始值
+  22   1        TH0 = 0xA2;   //设置定时初始值
+  23   1        TF0 = 0;    //清除TF0标志
+  24   1        ET0 = 1;    //开启定时器1中断
+  25   1        TR0 = 1;    //定时器0开始计时
+  26   1      
+  27   1      }
+  28          
+  29          //定时器0，中断服务函数
+  30          
+  31          void timer0_int(void) interrupt TIMER0_VECTOR
+  32          {
+  33   1        TF0 = 0;
+  34   1        delay_ms[0]++;
+  35   1        usart2_tick();
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    109    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

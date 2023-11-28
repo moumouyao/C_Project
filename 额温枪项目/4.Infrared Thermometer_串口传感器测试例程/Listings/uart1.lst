@@ -1,0 +1,181 @@
+C51 COMPILER V9.60.0.0   UART1                                                             11/13/2023 10:27:40 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART1
+OBJECT MODULE PLACED IN .\Objects\uart1.obj
+COMPILER INVOKED BY: D:\Keil_v5\Keil_5\C51\BIN\C51.EXE api\uart1.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEB
+                    -UG OBJECTEXTEND PRINT(.\Listings\uart1.lst) TABS(2) OBJECT(.\Objects\uart1.obj)
+
+line level    source
+
+   1          #include "uart1.h"
+   2          #include "tim.h"
+   3          
+   4          
+   5          void UartInit(void)   //9600bps@24.000MHz
+   6          {
+   7   1        SCON = 0x50;    //8位数据,可变波特率
+   8   1        AUXR |= 0x40;   //定时器时钟1T模式
+   9   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+  10   1        TMOD &= 0x0F;   //设置定时器模式
+  11   1        TL1 = 0x8F;   //设置定时初始值
+  12   1        TH1 = 0xFD;   //设置定时初始值
+  13   1        ET1 = 0;    //禁止定时器%d中断
+  14   1        TR1 = 1;    //定时器1开始计时
+  15   1      //  ES = 1;       //打开串口中断
+  16   1        ES = 0;         //打开串口中断
+  17   1      }
+  18          
+  19          
+  20          //发送单个字节  不开中断使用
+  21          void Uart_SendData(unsigned char byte)
+  22          {
+  23   1        SBUF = byte;
+  24   1        while(TI == 0);
+  25   1        TI = 0;
+  26   1      }
+  27          
+  28          //构造printf用的
+  29          char putchar(char c)
+  30          {
+  31   1        SBUF = c;
+  32   1        while(!TI);
+  33   1        TI = 0;
+  34   1        return c;
+  35   1      }
+  36          
+  37          //发送字符串  不开中断使用
+  38          void Uart_SendString(unsigned char * str, unsigned int len)
+  39          {
+  40   1        while(len--)
+  41   1          Uart_SendData(*str++);
+  42   1      }
+  43          
+  44          ////接收单个字节  不开中断使用
+  45          //unsigned char Uart_RecvData(void)
+  46          //{
+  47          //  while(RI == 0);
+  48          //  RI = 0;
+  49          //  return SBUF;
+  50          //}
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.60.0.0   UART1                                                             11/13/2023 10:27:40 PAGE 2   
+
+  55          
+  56          
+  57          //串口2用于测量传感器使用
+  58          
+  59          void Uart2Init(void)  //9600bps@24.000MHz
+  60          {
+  61   1        //引脚配置
+  62   1        P1M0 &= ~(0x3<<0);
+  63   1        P1M1 &= ~(0x3<<0);
+  64   1        
+  65   1        S2CON = 0x50;   //8位数据,可变波特率，允许接收
+  66   1        AUXR |= 0x04;   //定时器时钟1T模式
+  67   1        T2L = 0x8F;     //设置定时初始值
+  68   1        T2H = 0xFD;     //设置定时初始值
+  69   1        AUXR |= 0x10;   //定时器2开始计时
+  70   1        S2CON &=  ~(1<<1);  //关闭发送中断
+  71   1        S2CON |=  (1<<0); //打开接收中断
+  72   1        IE2   |=  (1<<0); //允许UART2中断
+  73   1      }
+  74          
+  75          void Uart2_SendData(unsigned char byte)
+  76          {
+  77   1        S2BUF = byte;
+  78   1        while(TI2 == 0);
+  79   1        CLR_TI2();
+  80   1      }
+  81          
+  82          
+  83          void Uart2_SendString(unsigned char * str, unsigned int len)
+  84          {
+  85   1        while(len--)
+  86   1          Uart2_SendData(*str++);
+  87   1      }
+  88          
+  89          unsigned char xdata UART2_RecvBuff[32] = {0};
+  90          unsigned char xdata UART2_RecvCnt = 0;
+  91          unsigned int  xdata UART2_RecvTick = 0;
+  92          unsigned char xdata UART2_RecvOver = 0;
+  93          unsigned char xdata byte = 0;
+  94          void UART2_int (void) interrupt UART2_VECTOR
+  95          {
+  96   1        if(RI2)//接收中断
+  97   1        {
+  98   2          CLR_RI2();
+  99   2          byte = S2BUF;
+ 100   2          UART2_RecvTick = 1;
+ 101   2          if(UART2_RecvOver == 0) {
+ 102   3            UART2_RecvBuff[UART2_RecvCnt++] = byte;
+ 103   3            UART2_RecvCnt %= 32;
+ 104   3          }
+ 105   2        }
+ 106   1      }
+ 107          
+ 108          void UART2_Tick(void)
+ 109          {
+ 110   1        if(UART2_RecvTick>0) {
+ 111   2          UART2_RecvTick++;
+ 112   2          if(UART2_RecvTick>100){
+ 113   3            UART2_RecvTick = 0;
+ 114   3            UART2_RecvOver = 1;
+ 115   3          }
+ 116   2        }
+C51 COMPILER V9.60.0.0   UART1                                                             11/13/2023 10:27:40 PAGE 3   
+
+ 117   1        
+ 118   1      
+ 119   1      }
+ 120          
+ 121          unsigned char Lu90614_ReadData(float *value)
+ 122          {
+ 123   1        //体温测量
+ 124   1        unsigned char xdata ret = 0;
+ 125   1        unsigned char xdata cnt = 0;
+ 126   1        unsigned char xdata check = 0;
+ 127   1        unsigned char xdata CMD1[6] = {0xFA, 0xC5, 0xBF,0xFA, 0xCA, 0xC4};
+ 128   1        Uart2_SendString(CMD1, 6);
+ 129   1        while(UART2_RecvOver == 0) {
+ 130   2          Delay_ms(1); cnt++;
+ 131   2          if(cnt>100) {
+ 132   3            return ret;
+ 133   3          }
+ 134   2        }
+ 135   1        if(UART2_RecvOver == 1) {
+ 136   2          if(UART2_RecvCnt != 9) goto err;
+ 137   2          
+ 138   2          for(cnt = 0; cnt<UART2_RecvCnt-1; cnt++) {
+ 139   3            check += UART2_RecvBuff[cnt];
+ 140   3          }
+ 141   2          if(check != UART2_RecvBuff[UART2_RecvCnt-1]) goto err;
+ 142   2          *value = UART2_RecvBuff[2] + UART2_RecvBuff[3]/100.0;
+ 143   2          ret = 1;
+ 144   2        }
+ 145   1        err:
+ 146   1          UART2_RecvCnt = 0;
+ 147   1          UART2_RecvTick = 0;
+ 148   1          UART2_RecvOver = 0;
+ 149   1        return ret;
+ 150   1        
+ 151   1      }
+ 152          
+ 153          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    548    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =     37       9
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

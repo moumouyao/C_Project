@@ -1,0 +1,1 @@
+"api\lcd_driver.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG OBJECTEXTEND PRINT(.\Listings\lcd_driver.lst) TABS (2) OBJECT(.\Objects\lcd_driver.obj)

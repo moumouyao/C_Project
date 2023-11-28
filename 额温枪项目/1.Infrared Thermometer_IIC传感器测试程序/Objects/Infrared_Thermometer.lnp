@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\ioConfig.obj",
+".\Objects\tim.obj",
+".\Objects\uart1.obj",
+".\Objects\key.obj",
+".\Objects\mlx90614.obj",
+".\Objects\power.obj",
+".\Objects\STARTUP.obj" 
+TO ".\Objects\Infrared_Thermometer" 
+PRINT(".\Listings\Infrared_Thermometer.m51") RAMSIZE(256) 

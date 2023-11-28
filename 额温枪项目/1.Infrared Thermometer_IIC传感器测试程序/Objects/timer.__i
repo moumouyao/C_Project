@@ -1,0 +1,1 @@
+"stc8_lib\timer.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG OBJECTEXTEND PRINT(.\Listings\timer.lst) TABS (2) OBJECT(.\Objects\timer.obj)

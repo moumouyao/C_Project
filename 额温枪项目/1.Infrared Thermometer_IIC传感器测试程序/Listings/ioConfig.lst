@@ -1,0 +1,60 @@
+C51 COMPILER V9.60.7.0   IOCONFIG                                                          07/05/2023 10:02:09 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE IOCONFIG
+OBJECT MODULE PLACED IN .\Objects\ioConfig.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE api\ioConfig.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG O
+                    -BJECTEXTEND PRINT(.\Listings\ioConfig.lst) OBJECT(.\Objects\ioConfig.obj)
+
+line level    source
+
+   1          #include "ioConfig.h"
+   2          
+   3          void IO_Config(void)
+   4          {
+   5   1              //LED BEEP
+   6   1              P0M1 &= ~(0x3<<4),      P0M0 |= (0x3<<4);//ÍÆÍìÊä³ö
+   7   1              //KEY
+   8   1              P0M1 |=  (0xF<<0),      P0M0 &= ~(0xF<<0);
+   9   1              //BAT
+  10   1              P1M1 |=  (0x1<<3),      P1M0 &= ~(0x1<<3);
+  11   1              //EEPROM
+  12   1              P1M1 &= ~(1<<4),        P1M0 |=  (1<<4);
+  13   1              P1M1 &= ~(1<<5),        P1M0 &= ~(1<<5);
+  14   1              //MLX906
+  15   1              P2M1 &= ~(1<<4),        P2M0 |=  (1<<4);
+  16   1              P2M1 &= ~(1<<5),        P2M0 &= ~(1<<5);
+  17   1              //LCD
+  18   1              P2M1 &= ~(1<<0),        P2M0 |=  (1<<0);
+  19   1              P4M1 &= ~(0x1F<<0),     P4M0 |=  (0x1F<<0);
+  20   1      }
+  21          
+  22          
+  23          
+  24          
+  25          
+  26          
+  27          
+  28          
+  29          
+  30          
+  31          
+  32          
+  33          
+  34          
+  35          
+  36          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     55    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,10 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\timer.obj",
+".\Objects\usart.obj",
+".\Objects\LU90614.obj",
+".\Objects\lcd_driver.obj",
+".\Objects\font.obj",
+".\Objects\key.obj" 
+TO ".\Objects\test" 
+PRINT(".\Listings\test.m51") RAMSIZE(256) 

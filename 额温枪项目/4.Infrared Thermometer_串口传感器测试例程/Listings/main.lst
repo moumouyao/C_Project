@@ -1,0 +1,83 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/13/2023 10:27:40 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\Keil_5\C51\BIN\C51.EXE api\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBU
+                    -G OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /***********************************************************************************
+   2           * __  ____    __ ______
+   3           * \ \/ /\ \  / /|  __  \ 官方网站： www.edu118.com
+   4           *  \  /  \_\/_/ | |  \ |         
+   5           *  /  \   |  |  | |__/ |         
+   6           * /_/\_\  |__|  |______/         
+   7           *
+   8           * 版权◎深圳信盈达科技有限公司（郑州分部）保留所有权
+   9           * 文件名：main.c
+  10           * 作者：XYD_HWG
+  11           * 版本号：V0.0.2
+  12           * 日期：2021年12月11日
+  13           * 描述：额温枪实训版本测试代码
+  14           * 备注：STC8G2K32S2、系统时钟24MHz、复位引脚可用、串口1波特率9600
+  15           * 历史记录：
+  16           * 
+  17           **********************************************************************************
+  18           */ 
+  19          
+  20          #include "main.h"
+  21          #include "tim.h"
+  22          #include "uart1.h"
+  23          #include "stdio.h"
+  24          
+  25          float now_temp = 0; //温度和温度阈值
+  26          
+  27          
+  28          
+  29          
+  30          
+  31          void main()
+  32          {
+  33   1        AUXR &= ~(1<<1);//使用内扩RAM
+  34   1        Tim0_Config();
+  35   1        UartInit();
+  36   1        Uart2Init();
+  37   1        EA = 1;
+  38   1        Uart_SendString("hello\r\n", 7);
+  39   1      
+  40   1        while(1)
+  41   1        {
+  42   2          printf("hello\r\n");
+  43   2          Lu90614_ReadData(&now_temp);
+  44   2          printf("now_temp:%0.2f", now_temp);
+  45   2          Delay_ms(500);
+  46   2        }
+  47   1      }
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.60.0.0   MAIN                                                              11/13/2023 10:27:40 PAGE 2   
+
+  55          
+  56          
+  57          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     75    ----
+   CONSTANT SIZE    =     23    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

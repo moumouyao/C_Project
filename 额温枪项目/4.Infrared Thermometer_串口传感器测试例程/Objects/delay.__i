@@ -1,0 +1,1 @@
+"stc8_lib\delay.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG OBJECTEXTEND PRINT(.\Listings\delay.lst) TABS (2) OBJECT(.\Objects\delay.obj)

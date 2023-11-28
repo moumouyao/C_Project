@@ -1,0 +1,438 @@
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MLX90614
+OBJECT MODULE PLACED IN .\Objects\mlx90614.obj
+COMPILER INVOKED BY: E:\Keil_v5\C51\BIN\C51.EXE api\mlx90614.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG O
+                    -BJECTEXTEND PRINT(.\Listings\mlx90614.lst) OBJECT(.\Objects\mlx90614.obj)
+
+line level    source
+
+   1          #include "mlx90614.h"
+   2          
+   3          
+   4          
+   5          #define ACK                                             0
+   6          #define NACK                                    1
+   7          #define SA                                              0x00 //从机地址，单个MLX90614时地址为0x00,多个时地址默认为0x5a
+   8          #define RAM_ACCESS              0x00 //RAM access command
+   9          #define EEPROM_ACCESS   0x20 //EEPROM access command
+  10          #define RAM_TOBJ1                       0x07 //To1 address in the eeprom
+  11          
+  12          sbit SMBUS_SCK=P2^4;
+  13          sbit SMBUS_SDA=P2^5;
+  14          
+  15          #define SMBUS_SCK_H()       (SMBUS_SCK=1)
+  16          #define SMBUS_SCK_L()       (SMBUS_SCK=0)
+  17          #define SMBUS_SDA_H()       (SMBUS_SDA=1)
+  18          #define SMBUS_SDA_L()       (SMBUS_SDA=0)
+  19          
+  20          #define SMBUS_SDA_PIN()     (SMBUS_SDA) //读取引脚电平
+  21          
+  22          void Delay5us()         //@24.000MHz
+  23          {
+  24   1              unsigned char i;
+  25   1      
+  26   1              i = 38;
+  27   1              while (--i);
+  28   1      }
+  29          
+  30          
+  31          void Delay2us()         //@24.000MHz
+  32          {
+  33   1              unsigned char i;
+  34   1      
+  35   1              i = 14;
+  36   1              while (--i);
+  37   1      }
+  38          
+  39          
+  40          
+  41          void Delay3us()         //@24.000MHz
+  42          {
+  43   1              unsigned char i;
+  44   1      
+  45   1              i = 22;
+  46   1              while (--i);
+  47   1      }
+  48          
+  49          
+  50          void Delay6us()         //@24.000MHz
+  51          {
+  52   1              unsigned char i;
+  53   1      
+  54   1              i = 46;
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 2   
+
+  55   1              while (--i);
+  56   1      }
+  57          
+  58          
+  59          
+  60          /*******************************************************************************
+  61          * 函数名: SMBus_StartBit
+  62          * 功能  : 产生起始位
+  63          * Input          : None
+  64          * Output         : None
+  65          * Return         : None
+  66          *******************************************************************************/
+  67          void SMBus_StartBit(void)
+  68          {
+  69   1          SMBUS_SDA_H();              // Set SDA line
+  70   1          Delay5us();     // Wait a few microseconds
+  71   1          SMBUS_SCK_H();              // Set SCL line
+  72   1          Delay5us();     // Generate bus free time between Stop
+  73   1          SMBUS_SDA_L();              // Clear SDA line
+  74   1          Delay5us();     // Hold time after (Repeated) Start
+  75   1          // Condition. After this period, the first clock is generated.
+  76   1          //(Thd:sta=4.0us min)
+  77   1          SMBUS_SCK_L();          // Clear SCL line
+  78   1          Delay5us();     // Wait a few microseconds
+  79   1      }
+  80          
+  81          /*******************************************************************************
+  82          * 函数名: SMBus_StopBit
+  83          * 功能: Generate STOP condition on SMBus
+  84          * Input          : None
+  85          * Output         : None
+  86          * Return         : None
+  87          *******************************************************************************/
+  88          void SMBus_StopBit(void)
+  89          {
+  90   1          SMBUS_SCK_L();              // Clear SCL line
+  91   1          Delay5us();     // Wait a few microseconds
+  92   1          SMBUS_SDA_L();              // Clear SDA line
+  93   1          Delay5us();     // Wait a few microseconds
+  94   1          SMBUS_SCK_H();              // Set SCL line
+  95   1          Delay5us();     // Stop condition setup time(Tsu:sto=4.0us min)
+  96   1          SMBUS_SDA_H();              // Set SDA line
+  97   1      }
+  98          
+  99          /*******************************************************************************
+ 100          * 函数名: SMBus_SendByte
+ 101          * 功能: Send a byte on SMBus
+ 102          * Input          : Tx_buffer
+ 103          * Output         : None
+ 104          * Return         : None
+ 105          *******************************************************************************/
+ 106          u8 SMBus_SendByte(u8 Tx_buffer)
+ 107          {
+ 108   1          u8  Bit_counter;
+ 109   1          u8  Ack_bit;
+ 110   1          u8  bit_out;
+ 111   1      
+ 112   1          for(Bit_counter=8; Bit_counter; Bit_counter--)
+ 113   1          {
+ 114   2              if (Tx_buffer&0x80)
+ 115   2              {
+ 116   3                  bit_out=1;   // If the current bit of Tx_buffer is 1 set bit_out
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 3   
+
+ 117   3              }
+ 118   2              else
+ 119   2              {
+ 120   3                  bit_out=0;  // else clear bit_out
+ 121   3              }
+ 122   2              SMBus_SendBit(bit_out);         // Send the current bit on SDA
+ 123   2              Tx_buffer<<=1;                          // Get next bit for checking
+ 124   2          }
+ 125   1      
+ 126   1          Ack_bit=SMBus_ReceiveBit();         // Get acknowledgment bit
+ 127   1          return      Ack_bit;
+ 128   1      }
+ 129          
+ 130          /*******************************************************************************
+ 131          * 函数名: SMBus_SendBit
+ 132          * 功能: Send a bit on SMBus 82.5kHz
+ 133          * Input          : bit_out
+ 134          * Output         : None
+ 135          * Return         : None
+ 136          *******************************************************************************/
+ 137          void SMBus_SendBit(u8 bit_out)
+ 138          {
+ 139   1          if(bit_out==0)
+ 140   1          {
+ 141   2              SMBUS_SDA_L();
+ 142   2          }
+ 143   1          else
+ 144   1          {
+ 145   2              SMBUS_SDA_H();
+ 146   2          }
+ 147   1          Delay2us();                                 // Tsu:dat = 250ns minimum
+ 148   1          SMBUS_SCK_H();                                      // Set SCL line
+ 149   1          Delay6us();                                 // High Level of Clock Pulse
+ 150   1          SMBUS_SCK_L();                                      // Clear SCL line
+ 151   1          Delay3us();                                 // Low Level of Clock Pulse
+ 152   1      //      SMBUS_SDA_H();                              // Master release SDA line ,
+ 153   1          return;
+ 154   1      }
+ 155          
+ 156          /*******************************************************************************
+ 157          * Function Name  : SMBus_ReceiveBit
+ 158          * Description    : Receive a bit on SMBus
+ 159          * Input          : None
+ 160          * Output         : None
+ 161          * Return         : Ack_bit
+ 162          *******************************************************************************/
+ 163          u8 SMBus_ReceiveBit(void)
+ 164          {
+ 165   1          u8 Ack_bit;
+ 166   1      
+ 167   1          SMBUS_SDA_H();          //引脚靠外部电阻上拉，当作输入
+ 168   1                      Delay2us();                     // High Level of Clock Pulse
+ 169   1          SMBUS_SCK_H();                      // Set SCL line
+ 170   1          Delay5us();                 // High Level of Clock Pulse
+ 171   1          if (SMBUS_SDA_PIN())
+ 172   1          {
+ 173   2              Ack_bit=1;
+ 174   2          }
+ 175   1          else
+ 176   1          {
+ 177   2              Ack_bit=0;
+ 178   2          }
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 4   
+
+ 179   1          SMBUS_SCK_L();                      // Clear SCL line
+ 180   1          Delay3us();                 // Low Level of Clock Pulse
+ 181   1      
+ 182   1          return      Ack_bit;
+ 183   1      }
+ 184          
+ 185          /*******************************************************************************
+ 186          * 函数名: SMBus_ReceiveByte
+ 187          * 功能: Receive a byte on SMBus
+ 188          * Input          : ack_nack
+ 189          * Output         : None
+ 190          * Return         : RX_buffer
+ 191          *******************************************************************************/
+ 192          u8 SMBus_ReceiveByte(u8 ack_nack)
+ 193          {
+ 194   1          u8  RX_buffer;
+ 195   1          u8  Bit_Counter;
+ 196   1      
+ 197   1          for(Bit_Counter=8; Bit_Counter; Bit_Counter--)
+ 198   1          {
+ 199   2              if(SMBus_ReceiveBit())                  // Get a bit from the SDA line
+ 200   2              {
+ 201   3                  RX_buffer <<= 1;                    // If the bit is HIGH save 1  in RX_buffer
+ 202   3                  RX_buffer |=0x01;
+ 203   3              }
+ 204   2              else
+ 205   2              {
+ 206   3                  RX_buffer <<= 1;                    // If the bit is LOW save 0 in RX_buffer
+ 207   3                  RX_buffer &=0xfe;
+ 208   3              }
+ 209   2          }
+ 210   1          SMBus_SendBit(ack_nack);                    // Sends acknowledgment bit
+ 211   1          return RX_buffer;
+ 212   1      }
+ 213          
+ 214          /*******************************************************************************
+ 215          * 函数名: SMBus_Delay
+ 216          * 功能: 延时  一次循环约1us
+ 217          * Input          : time
+ 218          * Output         : None
+ 219          * Return         : None
+ 220          *******************************************************************************/
+ 221          //void SMBus_Delay(u16 time)
+ 222          //{
+ 223          //    u16 i, j;
+ 224          //    for (i=0; i<4; i++)
+ 225          //    {
+ 226          //        for (j=0; j<time; j++);
+ 227          //    }
+ 228          //}
+ 229          
+ 230          /*******************************************************************************
+ 231          * 函数名: SMBus_Init
+ 232          * 功能: SMBus初始化
+ 233          * Input          : None
+ 234          * Output         : None
+ 235          * Return         : None
+ 236          *******************************************************************************/
+ 237          void SMBus_Init()
+ 238          {
+ 239   1              SMBUS_SCK_H();
+ 240   1              SMBUS_SDA_H();
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 5   
+
+ 241   1      }
+ 242          
+ 243          /*******************************************************************************
+ 244           * 函数名: SMBus_ReadMemory
+ 245           * 功能: READ DATA FROM RAM/EEPROM
+ 246           * Input          : slaveAddress, command
+ 247           * Return         : Data
+ 248          *******************************************************************************/
+ 249          u16 SMBus_ReadMemory(u8 slaveAddress, u8 command)
+ 250          {
+ 251   1          u16 dataa;                  // Data storage (DataH:DataL)
+ 252   1          u8 Pec;                             // PEC byte storage
+ 253   1          u8 DataL=0;                 // Low data byte storage
+ 254   1          u8 DataH=0;                 // High data byte storage
+ 255   1          u8 arr[6];                  // Buffer for the sent bytes
+ 256   1          u8 PecReg;                  // Calculated PEC byte storage
+ 257   1          u8 ErrorCounter;    // Defines the number of the attempts for communication with MLX90614
+ 258   1      
+ 259   1          ErrorCounter=0x00;                          // Initialising of ErrorCounter
+ 260   1                      slaveAddress <<= 1;     //2-7位表示从机地址
+ 261   1              
+ 262   1          do
+ 263   1          {
+ 264   2      repeat:
+ 265   2              SMBus_StopBit();                            //If slave send NACK stop comunication
+ 266   2              --ErrorCounter;                             //Pre-decrement ErrorCounter
+ 267   2              if(!ErrorCounter)                           //ErrorCounter=0?
+ 268   2              {
+ 269   3                  break;                                          //Yes,go out from do-while{}
+ 270   3              }
+ 271   2      
+ 272   2              SMBus_StartBit();                               //Start condition
+ 273   2              if(SMBus_SendByte(slaveAddress))//Send SlaveAddress 最低位Wr=0表示接下来写命令
+ 274   2              {
+ 275   3                  goto        repeat;                     //Repeat comunication again
+ 276   3              }
+ 277   2              if(SMBus_SendByte(command))         //Send command
+ 278   2              {
+ 279   3                  goto        repeat;                 //Repeat comunication again
+ 280   3              }
+ 281   2      
+ 282   2              SMBus_StartBit();                                       //Repeated Start condition
+ 283   2              if(SMBus_SendByte(slaveAddress+1))      //Send SlaveAddress 最低位Rd=1表示接下来读数据
+ 284   2              {
+ 285   3                  goto        repeat;                 //Repeat comunication again
+ 286   3              }
+ 287   2      
+ 288   2              DataL = SMBus_ReceiveByte(ACK); //Read low data,master must send ACK
+ 289   2              DataH = SMBus_ReceiveByte(ACK); //Read high data,master must send ACK
+ 290   2              Pec = SMBus_ReceiveByte(NACK);  //Read PEC byte, master must send NACK
+ 291   2              SMBus_StopBit();                                //Stop condition
+ 292   2      
+ 293   2              arr[5] = slaveAddress;          //
+ 294   2              arr[4] = command;                       //
+ 295   2              arr[3] = slaveAddress+1;        //Load array arr
+ 296   2              arr[2] = DataL;                         //
+ 297   2              arr[1] = DataH;                         //
+ 298   2              arr[0] = 0;                                     //
+ 299   2              PecReg=PEC_Calculation(arr);//Calculate CRC
+ 300   2          }
+ 301   1          while(PecReg != Pec);               //If received and calculated CRC are equal go out from do-while{}
+ 302   1      
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 6   
+
+ 303   1                      dataa = (DataH<<8) | DataL;     //data=DataH:DataL
+ 304   1          return dataa;
+ 305   1      }
+ 306          
+ 307          /*******************************************************************************
+ 308          * 函数名: PEC_calculation
+ 309          * 功能 : 数据校验
+ 310          * Input          : pec[]
+ 311          * Output         : None
+ 312          * Return         : pec[0]-this byte contains calculated crc value
+ 313          *******************************************************************************/
+ 314          u8 PEC_Calculation(u8 pec[])
+ 315          {
+ 316   1          u8  crc[6];
+ 317   1          u8  BitPosition=47;
+ 318   1          u8  shift;
+ 319   1          u8  i;
+ 320   1          u8  j;
+ 321   1          u8  temp;
+ 322   1      
+ 323   1          do
+ 324   1          {
+ 325   2              /*Load pattern value 0x000000000107*/
+ 326   2              crc[5]=0;
+ 327   2              crc[4]=0;
+ 328   2              crc[3]=0;
+ 329   2              crc[2]=0;
+ 330   2              crc[1]=0x01;
+ 331   2              crc[0]=0x07;
+ 332   2      
+ 333   2              /*Set maximum bit position at 47 ( six bytes byte5...byte0,MSbit=47)*/
+ 334   2              BitPosition=47;
+ 335   2      
+ 336   2              /*Set shift position at 0*/
+ 337   2              shift=0;
+ 338   2      
+ 339   2              /*Find first "1" in the transmited message beginning from the MSByte byte5*/
+ 340   2              i=5;
+ 341   2              j=0;
+ 342   2              while((pec[i]&(0x80>>j))==0 && i>0)
+ 343   2              {
+ 344   3                  BitPosition--;
+ 345   3                  if(j<7)
+ 346   3                  {
+ 347   4                      j++;
+ 348   4                  }
+ 349   3                  else
+ 350   3                  {
+ 351   4                      j=0x00;
+ 352   4                      i--;
+ 353   4                  }
+ 354   3              }/*End of while */
+ 355   2      
+ 356   2              /*Get shift value for pattern value*/
+ 357   2              shift=BitPosition-8;
+ 358   2      
+ 359   2              /*Shift pattern value */
+ 360   2              while(shift)
+ 361   2              {
+ 362   3                  for(i=5; i<0xFF; i--)
+ 363   3                  {
+ 364   4                      if((crc[i-1]&0x80) && (i>0))
+C51 COMPILER V9.60.7.0   MLX90614                                                          07/05/2023 10:02:10 PAGE 7   
+
+ 365   4                      {
+ 366   5                          temp=1;
+ 367   5                      }
+ 368   4                      else
+ 369   4                      {
+ 370   5                          temp=0;
+ 371   5                      }
+ 372   4                      crc[i]<<=1;
+ 373   4                      crc[i]+=temp;
+ 374   4                  }/*End of for*/
+ 375   3                  shift--;
+ 376   3              }/*End of while*/
+ 377   2      
+ 378   2              /*Exclusive OR between pec and crc*/
+ 379   2              for(i=0; i<=5; i++)
+ 380   2              {
+ 381   3                  pec[i] ^=crc[i];
+ 382   3              }/*End of for*/
+ 383   2          }
+ 384   1          while(BitPosition>8); /*End of do-while*/
+ 385   1      
+ 386   1          return pec[0];
+ 387   1      }
+ 388          
+ 389           /*******************************************************************************
+ 390           * 函数名: SMBus_ReadTemp
+ 391           * 功能: 计算并返回温度值
+ 392           * Return         : SMBus_ReadMemory(0x00, 0x07)*0.02-273.15
+ 393          *******************************************************************************/
+ 394          float SMBus_ReadTemp(void)
+ 395          {   
+ 396   1              return SMBus_ReadMemory(SA, RAM_ACCESS|RAM_TOBJ1)*0.02-273.15;
+ 397   1      }
+ 398          
+ 399          /*********************************END OF FILE*********************************/
+ 400          
+ 401          
+ 402          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    574    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      29
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

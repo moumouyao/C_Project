@@ -1,0 +1,46 @@
+C51 COMPILER V9.60.0.0   ADC3                                                              12/11/2021 15:21:40 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE ADC3
+OBJECT MODULE PLACED IN .\Objects\adc3.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE api\adc3.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\api;.\stc8_lib) DEBUG OBJEC
+                    -TEXTEND PRINT(.\Listings\adc3.lst) TABS(2) OBJECT(.\Objects\adc3.obj)
+
+line level    source
+
+   1          #include "adc3.h"
+   2          
+   3          void  ADC_config(void)
+   4          {
+   5   1        ADC_InitTypeDef   ADC_InitStructure;    //结构定义
+   6   1        ADC_InitStructure.ADC_SMPduty   = 31;   //ADC 模拟信号采样时间控制, 0~31（注意： SMPDUTY 一定不能设置小于 
+             -10）
+   7   1        ADC_InitStructure.ADC_CsSetup   = 0;    //ADC 通道选择时间控制 0(默认),1
+   8   1        ADC_InitStructure.ADC_CsHold    = 1;    //ADC 通道选择保持时间控制 0,1(默认),2,3
+   9   1        ADC_InitStructure.ADC_Speed     = ADC_SPEED_2X1T;   //设置 ADC 工作时钟频率 ADC_SPEED_2X1T~ADC_SPEED_2X16T
+  10   1        ADC_InitStructure.ADC_Power     = ENABLE;       //ADC功率允许/关闭  ENABLE,DISABLE
+  11   1        ADC_InitStructure.ADC_AdjResult = ADC_RIGHT_JUSTIFIED;  //ADC结果调整,  ADC_LEFT_JUSTIFIED,ADC_RIGHT_JUSTIF
+             -IED
+  12   1        ADC_InitStructure.ADC_Priority    = Priority_0;     //指定中断优先级(低到高) Priority_0,Priority_1,Priority
+             -_2,Priority_3
+  13   1        ADC_InitStructure.ADC_Interrupt = DISABLE;      //中断允许  ENABLE,DISABLE
+  14   1        ADC_Inilize(&ADC_InitStructure);          //初始化
+  15   1        ADC_PowerControl(ENABLE);             //单独的ADC电源操作函数, ENABLE或DISABLE
+  16   1      }
+  17          
+  18          
+  19          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     34    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

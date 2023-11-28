@@ -1,0 +1,135 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/13/2023 20:36:46 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\Keil_5\C51\BIN\C51.EXE user\main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user;.\api) DEBUG O
+                    -BJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "main.h"
+   2          
+   3          
+   4          
+   5          char key_val = 0;
+   6          char mode_val = 0;
+   7          
+   8          int main(){
+   9   1      
+  10   1        EA = 1; // 开启总中断
+  11   1      
+  12   1        Timer0Init();
+*** WARNING C206 IN LINE 12 OF user\main.c: 'Timer0Init': missing function-prototype
+  13   1        UartInit();
+  14   1        LU90614_init(); 
+  15   1        P0M0 = 0x00;
+  16   1        P0M1 = 0x00;
+  17   1        P1M0 = 0x00;
+  18   1        P1M1 = 0x00;
+  19   1        P2M1 &= ~(1<<0),  P2M0 |=  (1<<0);
+  20   1        P4M1 &= ~(0x1F<<0), P4M0 |=  (0x1F<<0);
+  21   1        P0M1 |=  (0xF<<0),  P0M0 &= ~(0xF<<0);
+  22   1        LCD_Init();
+  23   1        LCD_ShowString(70, 200, RED, WHITE, "hello wrold");
+  24   1        LCD_ShowSmg((240-32*5)/2-8, 100, BLUE,WHITE,"12");
+  25   1        
+  26   1        
+  27   1        while(1){
+  28   2          key_val = Get_KeyValue();
+  29   2          change_mode();
+  30   2          Measure_body();
+  31   2        }
+  32   1            
+  33   1          
+  34   1        
+  35   1      }
+  36          
+  37          
+  38          //切换模式
+  39          void change_mode(void){
+  40   1        if(key_val == 4){
+  41   2          mode_val++;
+  42   2        }
+  43   1        else{
+  44   2          return;
+  45   2        }
+  46   1        
+  47   1      //  printf("%d\r\n", mode_val);
+  48   1        switch(mode_val){
+  49   2          case 1: 
+  50   2            LCD_ShowString(70, 200, WHITE, WHITE, "               ");
+  51   2            LCD_ShowString(70, 200, RED, WHITE, "Measure"); 
+  52   2            break;
+  53   2          case 2: 
+C51 COMPILER V9.60.0.0   MAIN                                                              11/13/2023 20:36:46 PAGE 2   
+
+  54   2            LCD_ShowString(70, 200, WHITE, WHITE, "               ");
+  55   2            LCD_ShowString(70, 200, RED, WHITE, "Setup");
+  56   2            break;
+  57   2          case 3: 
+  58   2            LCD_ShowString(70, 200, WHITE, WHITE, "               ");
+  59   2            LCD_ShowString(70, 200, RED, WHITE, "History");
+  60   2            break;
+  61   2          case 4: 
+  62   2            LCD_ShowString(70, 200, WHITE, WHITE, "               ");
+  63   2            LCD_ShowString(70, 200, RED, WHITE, "Silent");
+  64   2            break;
+  65   2          default : break;
+  66   2        }
+  67   1        if(mode_val == 4){
+  68   2          mode_val = 0;
+  69   2        }
+  70   1      }
+  71          
+  72          
+  73          //测量体温
+  74          void Measure_body(void){
+  75   1        char body_val[8] = {0};
+  76   1        unsigned char i;
+  77   1        float sum = 0;
+  78   1        if(key_val == 1){
+  79   2          for(i = 0; i < 5; i++){
+  80   3            printf("i = %d\r\n", i);
+  81   3            sum = read_body_temperature();
+  82   3            Delay_ms(10);
+  83   3          }
+  84   2        }
+  85   1                
+  86   1        sum = sum / 5;
+  87   1        sprintf(body_val, "%.2f", sum);
+  88   1        LCD_ShowSmg((240-32*5)/2-8, 100, BLUE,WHITE,(unsigned char*)body_val);
+  89   1        
+  90   1      }
+  91          
+  92          
+  93          
+  94          
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          
+ 101          
+ 102          
+ 103          
+ 104          
+ 105          
+ 106          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    530    ----
+   CONSTANT SIZE    =     82    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2      13
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   MAIN                                                              11/13/2023 20:36:46 PAGE 3   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

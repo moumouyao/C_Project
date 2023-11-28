@@ -1,0 +1,78 @@
+C51 COMPILER V9.60.0.0   LU90614                                                           11/13/2023 20:29:41 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LU90614
+OBJECT MODULE PLACED IN .\Objects\LU90614.obj
+COMPILER INVOKED BY: D:\Keil_v5\Keil_5\C51\BIN\C51.EXE api\LU90614.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user;.\api) DEBUG
+                    - OBJECTEXTEND PRINT(.\Listings\LU90614.lst) TABS(2) OBJECT(.\Objects\LU90614.obj)
+
+line level    source
+
+   1          #include "LU90614.h"
+   2          
+   3          
+   4          
+   5          
+   6          //温度传感器初始化
+   7          void LU90614_init(void){
+   8   1        Uart2Init();
+   9   1      }
+  10          
+  11          //读取体温
+  12          char read_body_temperature(void){
+  13   1        unsigned char wait_time = 0, check = 0, cnt;
+  14   1        unsigned char read_cmd[6] = {0xFA, 0xC5, 0xBF, 0xFA, 0xCA, 0xC4}; //读取体温指令
+  15   1        
+  16   1        Uart2_SendString(read_cmd, 6);  //发送命令
+  17   1        //等待传感器回复
+  18   1        while(!UART2_RecvOver){
+  19   2          Delay_ms(1);
+  20   2          wait_time++;
+  21   2          if(wait_time > 100){
+  22   3            return 1;
+  23   3          }
+  24   2        }
+  25   1        if(UART2_RecvCnt != 9){ //数据个数不对
+  26   2          UART2_RecvCnt = 0;
+  27   2          UART2_RecvTick = 0;
+  28   2          UART2_RecvOver = 0;
+  29   2          return -1;
+  30   2        }
+  31   1        
+  32   1        for( cnt = 0; cnt<UART2_RecvCnt-1; cnt++) {
+  33   2            check += UART2_RecvBuff[cnt];
+  34   2          }
+  35   1        if(check != UART2_RecvBuff[UART2_RecvCnt-1]){ //数据校验错误
+  36   2          UART2_RecvCnt = 0;
+  37   2          UART2_RecvTick = 0;
+  38   2          UART2_RecvOver = 0;
+  39   2          return -1;
+  40   2        }
+  41   1        printf("体温 %0.2f\r\n", UART2_RecvBuff[2] + UART2_RecvBuff[3]/100.0);
+  42   1          UART2_RecvCnt = 0;
+  43   1          UART2_RecvTick = 0;
+  44   1          UART2_RecvOver = 0;
+  45   1        return UART2_RecvBuff[2] + UART2_RecvBuff[3]/100.0;
+  46   1          
+  47   1        
+  48   1      }
+  49          
+  50          
+  51          
+  52          
+
+
+C51 COMPILER V9.60.0.0   LU90614                                                           11/13/2023 20:29:41 PAGE 2   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    280    ----
+   CONSTANT SIZE    =     19    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
