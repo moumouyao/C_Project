@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "assert.h": "c",
+        "fcntl.h": "c",
+        "time.h": "c",
+        "unistd.h": "c",
+        "getopt.h": "c",
+        "stdlib.h": "c",
+        "signal.h": "c",
+        "stdio.h": "c",
+        "socket.h": "c",
+        "mysql.h": "c",
+        "select.h": "c"
+    }
+}

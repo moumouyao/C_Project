@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "custom.h": "c",
+        "lv_list.h": "c",
+        "stdio.h": "c",
+        "lvgl.h": "c"
+    }
+}

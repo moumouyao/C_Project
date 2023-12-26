@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/lyx/A191/RV1126_RV1109_LINUX_SDK_V2.1.0_20210512/external/rkmedia/include",
+                "/home/lyx/A191/RV1126_RV1109_LINUX_SDK_V2.1.0_20210512/external/rkmedia/examples",
+                "/home/lyx/A191/RV1126_RV1109_LINUX_SDK_V2.1.0_20210512/external/rkmedia/include/rkmedia",
+                "/home/lyx/A191/RV1126_RV1109_LINUX_SDK_V2.1.0_20210512/external/rkmedia/include/easymedia",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

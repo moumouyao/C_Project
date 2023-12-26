@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "socket.h": "c",
+        "fcntl.h": "c",
+        "main.h": "c",
+        "getopt.h": "c",
+        "string.h": "c",
+        "types.h": "c",
+        "select.h": "c",
+        "mysql.h": "c",
+        "assert.h": "c",
+        "stdlib.h": "c",
+        "in.h": "c",
+        "netdb.h": "c",
+        "pthread.h": "c"
+    }
+}
