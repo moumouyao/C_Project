@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>网络设置</title>
+	<style type="text/css">
+		html,body{
+			width: 100%;
+			height:100%;
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		.contrainer{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.left{
+			width: 15%;
+			height: 100%;
+			float: left;
+			background-color: #173882;
+			color: #fff;
+		}
+		.right{
+			width: 85%;
+			float: right;
+		}
+		h1{
+			text-align: center;
+			color: #fff;
+			background-color: #173882;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			height: 90px;
+			line-height: 90px;
+			border-bottom: 3px solid yellow;
+		}
+		ul,li,a{
+			list-style-type: none;
+			padding: 0;
+			text-align: right;
+			color: white;
+		}
+		a:link, a:visited {
+		  width: 90%;
+		  padding: 10px 5%;
+		  text-align: right;
+		  text-decoration: none;
+		  display: inline-block;
+		  border-bottom: 1px solid #fff;
+		}
+		li:first-child{
+			border-top: 1px solid #fff;
+		}
+
+		a:hover, a:active {
+		  background-color: #FFF;
+		  color: #173882;
+		}
+		.actived{
+		  background-color: #FFF;
+		  color: #173882;
+		}
+		.main{
+			margin: 20px;
+		}
+		.main h2{
+			padding-left: 15px;
+			color: #173882;
+		}
+		.table_box td strong {
+		    padding-right: 10px;
+		}
+
+		.table_box {
+		    border-collapse: collapse;
+		    border: 1px solid #dedede;
+		    border-spacing: 0;
+		    margin-bottom: 30px;
+		}
+
+		.table_box th,
+		.table_box td {
+		    border: 1px solid #ccc;
+		    font-size: 18px;
+		    font-weight: bold;
+		    background: #fff;
+		    padding: 10px 12px;
+		}
+
+		.table_box th {
+		    text-align: left;
+		    line-height: 40px;
+		}
+		.foot{
+			width: 100%;
+			position: absolute;
+			bottom:10px;
+			width:60%;
+			left:0;
+			right:0;
+			margin:0 auto;
+		}
+		.block{
+			text-align:center;
+			
+		}
+		.block span{
+			padding:0 15px;
+			font-size:14px;
+			color:#696969;
+		}
+		.hidden{
+			display:none;
+		}
+		.TEXTEDITB {
+			height: 25px;
+			width: 200px;
+			font-size: 16px;
+			color: #333;
+			font-style: normal;
+			text-align: left;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+<body>
+<div class="contrainer">
+	<h1>郑州汉威光电情报板设置</h1>
+	<div class="left">
+		<ul>
+			<li><a href="index.shtml" class="actived">网络设置</a></li>
+			<li><a href="device.shtml">设备参数</a></li>
+			<li><a href="power.shtml">电源设置</a></li>
+			<!-- <li><a href="sceen.shtml">屏幕自检</a></li> -->
+		</ul>
+	</div>
+	<div class="right">
+		<div class="main">
+			<h2>网络设置</h2>
+			<!-- 接收服务器传值 -->
+			<div class="hidden">
+				<p id="h_port"><!--#p--></p>
+				<p id="h_gateway"><!--#w--></p>
+				<p id="h_mode"><!--#m--></p>
+				<p id="h_ip"><!--#t--></p>
+				<p id="h_yanma"><!--#y--></p>
+			</div>
+			<form id="form1" name="form1" onsubmit="return Check()" action="beep.cgi">
+				<table width="100%" height="50" border="1" class="table_box">
+
+					<tr>
+						<td align="right" valign="middle"><strong>端口号:</strong></td>
+						<td><input name="port" type="text" class="TEXTEDITB"  maxlength="15" id="port"/></td>
+						<td align="right" valign="middle"><strong>IP地址:</strong></td>
+						<td><input name="ip" type="text" class="TEXTEDITB" id="ip" maxlength="15" /></td>
+					</tr>
+					
+					<tr>
+						<td align="right" valign="middle"><strong>通讯方式:</strong></td>
+						<td>
+							<select name="mode" style="width:30%;height:24px;line-height:24px;font-size:14px;" id="mode">
+								<option value="0">TCP</option>
+								<option value="1">UDP</option>
+							</select>
+						</td>
+						<td align="right" valign="middle"><strong>子网掩码:</strong></td>
+						<td>255.255.255.0</td>
+					</tr>
+
+					<tr>
+						<td></td>
+						<td></td>
+						<td align="right" valign="middle"><strong>网关:</strong></td>
+						<td><input name="gateway" type="text" class="TEXTEDITB" id="gateway" maxlength="15" /></td>
+					</tr>
+
+					<tr align="center" valign="middle">
+						<td colspan="4"><input type="submit" value="设置" /></td>
+					</tr>
+				</table>
+			</form>
+			
+			<div class="foot">
+				<div class="block">
+					网页版本:<span>V.1.1</span> 主控版本:<span><!--#z--></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script language="javascript" type="text/javascript">
+	function Check() {
+		var ippat = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+		var portpat = /\d/;
+		//IP地址
+		var ipaddr = document.getElementById("ip").value;
+		//端口号
+		var port = document.getElementById("port").value;
+		//网关
+		var gateway = document.getElementById("gateway").value;
+		
+		if (!(ippat.test(ipaddr))) {
+			alert("IP地址错误！\n");
+			return false;
+		}else if(!(ippat.test(gateway))){
+			alert("网关错误！\n");
+			return false;
+		}else if(!(portpat.test(port)) || port <= 0 || port >= 65535){
+			alert("端口错误！\n");
+			return false;
+		}
+		return true;
+	}
+	
+	window.onload = function(){
+		var port = document.getElementById("h_port").innerHTML;
+		var gateway = document.getElementById("h_gateway").innerHTML;
+		var ip = document.getElementById("h_ip").innerHTML;
+		var mode = document.getElementById("h_mode").innerHTML;
+		var yanma = document.getElementById("h_yanma").innerHTML;
+		
+		var r_port = port.replace(/(<!--#)[A-Za-z0-9_\-]*(-->)/g,"");
+		var r_gateway = gateway.replace(/(<!--#)[A-Za-z0-9_\-]*(-->)/g,"");
+		var r_ip = ip.replace(/(<!--#)[A-Za-z0-9_\-]*(-->)/g,"");
+		var r_mode = mode.replace(/(<!--#)[A-Za-z0-9_\-]*(-->)/g,"");
+		var r_yanma = yanma.replace(/(<!--#)[A-Za-z0-9_\-]*(-->)/g,"");
+		
+		document.getElementById("port").value= r_port;
+		document.getElementById("gateway").value= r_gateway;
+		document.getElementById("ip").value= r_ip;
+		document.getElementById("mode").value= r_mode;
+		document.getElementById("yanma").value= r_yanma;
+	}
+</script>
+</body>
+</html>

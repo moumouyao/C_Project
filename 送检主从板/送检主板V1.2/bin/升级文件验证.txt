@@ -1,0 +1,2 @@
+H  W  G  D  文件长度 +八个ff
+48 57 47 44    00 02 E6 70 FF FF FF FF     FF FF FF FF 

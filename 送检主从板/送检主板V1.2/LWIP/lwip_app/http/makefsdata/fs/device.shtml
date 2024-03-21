@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>设备参数</title>
+	<style type="text/css">
+		html,body{
+			width: 100%;
+			height:100%;
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		.contrainer{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.left{
+			width: 15%;
+			height: 100%;
+			float: left;
+			background-color: #173882;
+			color: #fff;
+		}
+		.right{
+			width: 85%;
+			float: right;
+		}
+		h1{
+			text-align: center;
+			color: #fff;
+			background-color: #173882;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			height: 90px;
+			line-height: 90px;
+			border-bottom: 3px solid yellow;
+		}
+		ul,li,a{
+			list-style-type: none;
+			padding: 0;
+			text-align: right;
+			color: white;
+		}
+		a:link, a:visited {
+		  width: 90%;
+		  padding: 10px 5%;
+		  text-align: right;
+		  text-decoration: none;
+		  display: inline-block;
+		  border-bottom: 1px solid #fff;
+		}
+		li:first-child{
+			border-top: 1px solid #fff;
+		}
+
+		a:hover, a:active {
+		  background-color: #FFF;
+		  color: #173882;
+		}
+		.actived{
+		  background-color: #FFF;
+		  color: #173882;
+		}
+		.main{
+			margin: 20px;
+		}
+		.main h2{
+			padding-left: 15px;
+			color: #173882;
+		}
+		.table_box td strong {
+		    padding-right: 10px;
+		}
+
+		.table_box {
+		    border-collapse: collapse;
+		    border: 1px solid #dedede;
+		    border-spacing: 0;
+		    margin-bottom: 30px;
+		}
+
+		.table_box th,
+		.table_box td {
+		    border: 1px solid #ccc;
+		    font-size: 18px;
+		    font-weight: bold;
+		    background: #fff;
+		    padding: 10px 12px;
+		}
+
+		.table_box th {
+		    text-align: left;
+		    line-height: 40px;
+		}
+		.foot{
+			width: 100%;
+			position: absolute;
+			bottom:10px;
+			width:60%;
+			left:0;
+			right:0;
+			margin:0 auto;
+		}
+		.block{
+			text-align:center;
+			
+		}
+		.block span{
+			padding:0 15px;
+			font-size:14px;
+			color:#696969;
+		}
+		.hidden{
+			display:none;
+		}
+		.input_span{
+			font-weight:normal;
+			font-size:14px;
+		}
+		.TEXTEDITB {
+			height: 25px;
+			width: 200px;
+			font-size: 16px;
+			color: #333;
+			font-style: normal;
+			text-align: left;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+<body>
+<div class="contrainer">
+	<h1>郑州汉威光电情报板设置</h1>
+	<div class="left">
+		<ul>
+			<li><a href="index.shtml">网络设置</a></li>
+			<li><a href="device.shtml" class="actived">设备参数</a></li>
+			<li><a href="power.shtml">电源设置</a></li>
+			<!-- <li><a href="sceen.shtml">屏幕自检</a></li> -->
+		</ul>
+	</div>
+	<div class="right">
+		<div class="main">
+			<h2>设备参数</h2>
+			
+			<!-- 接收服务器传值 -->
+			<div class="hidden">
+				<p id="h_color_r"><!--#r--></p>
+				<p id="h_color_g"><!--#g--></p>
+				<p id="h_color_b"><!--#b--></p>
+				<p id="h_lightLevel"><!--#l--></p>
+			</div>
+		
+			<table width="100%" height="50" border="1" class="table_box">
+
+				<tr>
+					<td align="right" valign="middle"><strong>设备地址:</strong></td>
+					<td><!--#a--></td>
+					<td align="right" valign="middle"><strong>颜色:</strong></td>
+					<td>
+						<input name="color_R" type="checkbox" value="0" id="color_R"/> R
+						<input name="color_G" type="checkbox" value="0" id="color_G" /> G
+						<input name="color_B" type="checkbox" value="0" id="color_B"/> B
+					</td>
+				</tr>
+				<tr>
+					<td align="right" valign="middle"><strong>屏幕宽度:</strong></td>
+					<td><!--#b--></td>
+					<td align="right" valign="middle"><strong>屏幕高度:</strong></td>
+					<td><!--#c--></td>
+				</tr>
+				<tr>
+					<td align="right" valign="middle"><strong>从控宽度:</strong></td>
+					<td><!--#d--></td>
+					<td align="right" valign="middle"><strong>从控高度:</strong></td>
+					<td><!--#e--></td>
+				</tr>
+				
+				<tr>
+					<td align="right" valign="middle"><strong>亮度级别:</strong></td>
+					<td>
+						<select name="lightLevel" style="width:50%;height:24px;line-height:24px;font-size:14px;" id="lightLevel">
+							<option value="32">32级</option>
+							<option value="64">64级</option>
+							<option value="1024">1024级</option>
+						</select>
+					</td>
+					<td align="right" valign="middle"><strong>最大亮度比例:</strong></td>
+					<td><!--#h-->&nbsp;&nbsp;<span class="input_span">%</span></td>
+				</tr>
+				
+			</table>
+			
+			<div class="foot">
+				<div class="block">
+					网页版本:<span>V.1.1</span> 主控版本:<span><!--#z--></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<script language="javascript" type="text/javascript">
+	
+	window.onload = function(){
+		var h_color_r = document.getElementById("h_color_r").innerHTML;
+		var h_color_g = document.getElementById("h_color_g").innerHTML;
+		var h_color_b = document.getElementById("h_color_b").innerHTML;
+		var h_lightLevel = document.getElementById("h_lightLevel").innerHTML;
+		
+
+		var verify = /(<!--#)[A-Za-z0-9_\-]*(-->)/g;
+		
+
+		var r_color_r = h_color_r.replace(verify,"");
+		var r_color_g = h_color_g.replace(verify,"");
+		var r_color_b = h_color_b.replace(verify,"");
+		var r_lightLevel = h_lightLevel.replace(verify,"");
+		
+		if (r_color_r == 1 ) {
+		document.getElementById("color_R").checked= r_color_r;
+		}
+		if (r_color_g == 1 ) {
+		document.getElementById("color_G").checked= r_color_g;
+		}
+		if (r_color_b == 1 ) {
+		document.getElementById("color_B").checked= r_color_b;
+		}
+		
+		document.getElementById("lightLevel").value= r_lightLevel;
+	}
+</script>
+</body>
+</html>

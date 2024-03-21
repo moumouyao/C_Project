@@ -1,0 +1,7 @@
+--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork -I ..\CORE -I ..\SYSTEM\delay -I ..\SYSTEM\sys -I ..\SYSTEM\usart -I ..\FWLIB\STM32F4xx_StdPeriph_Driver\inc -I ..\USER -I ..\HARDWARE\ETHERNET -I ..\HARDWARE\TIMER -I ..\HARDWARE\LED -I ..\HARDWARE\SRAM -I ..\FWLIB\STM32F4x7_ETH_Driver\inc -I ..\LWIP -I ..\LWIP\arch -I ..\LWIP\lwip_header -I ..\LWIP\app\TCP_Client -I ..\LWIP\lwip_app\lwip_comm -I ..\LWIP\lwip-1.4.1\src\include -I ..\LWIP\lwip-1.4.1\src\include\ipv4 -I ..\LWIP\lwip-1.4.1\src\include\lwip -I ..\LWIP\lwip-1.4.1\src\include\netif -I ..\LWIP\lwip_app\tcp_server_demo -I ..\IAP -I ..\MALLOC -I ..\HARDWARE\STMFLASH -I ..\UCOSII\CONFIG -I ..\UCOSII\CORE -I ..\UCOSII\PORT -I ..\HARDWARE\BSP -I ..\APP -I ..\FF9 -I ..\HARDWARE\24CXX -I ..\HARDWARE\IIC -I ..\HARDWARE\DS18B20 -I ..\HARDWARE\power -I ..\HARDWARE\RTC -I ..\HARDWARE\LSENS -I ..\HARDWARE\ADC3 -I ..\HARDWARE\AD -I ..\HARDWARE\BMP -I ..\HARDWARE\I2C -I ..\HARDWARE\KEY -I ..\LWIP\lwip_app\udp_demo -I ..\LWIP\lwip_app\web_server_demo -I ..\LWIP\lwip_app\http -I ..\LWIP\lwip_app\udp -I ..\cJSON
+-I.\RTE\_LWIP
+-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+-ID:\Keil\ARM\CMSIS\Include
+-ID:\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Device\Include
+-D__UVISION_VERSION="525" -DSTM32F407xx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER
+-o ..\obj\ctrlcenter_app.o --omf_browse ..\obj\ctrlcenter_app.crf --depend ..\obj\ctrlcenter_app.d "..\APP\ctrlcenter_app.c"

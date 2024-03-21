@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>电源设置</title>
+	<style type="text/css">
+		html,body{
+			width: 100%;
+			height:100%;
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		.contrainer{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.left{
+			width: 15%;
+			height: 100%;
+			float: left;
+			background-color: #173882;
+			color: #fff;
+		}
+		.right{
+			width: 85%;
+			float: right;
+		}
+		h1{
+			text-align: center;
+			color: #fff;
+			background-color: #173882;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			height: 90px;
+			line-height: 90px;
+			border-bottom: 3px solid yellow;
+		}
+		ul,li,a{
+			list-style-type: none;
+			padding: 0;
+			text-align: right;
+			color: #fff;
+		}
+		
+		a:link, a:visited {
+		  width: 90%;
+		  padding: 10px 5%;
+		  text-align: right;
+		  text-decoration: none;
+		  display: inline-block;
+		  border-bottom: 1px solid #fff;
+		}
+		li:first-child{
+			border-top: 1px solid #fff;
+		}
+
+		a:hover, a:active {
+		  background-color: #FFF;
+		  color: #173882;
+		}
+		.actived{
+		  background-color: #FFF;
+		  color: #173882 !important;
+		}
+		.main{
+			margin: 20px;
+		}
+		.main h2{
+			padding-left: 15px;
+			color: #173882;
+		}
+		.table_box td strong {
+		    padding-right: 10px;
+		}
+
+		.table_box {
+		    border-collapse: collapse;
+		    border: 1px solid #dedede;
+		    border-spacing: 0;
+		    margin-bottom: 30px;
+		}
+
+		.table_box th,
+		.table_box td {
+		    border: 1px solid #ccc;
+		    font-size: 18px;
+		    font-weight: bold;
+		    background: #fff;
+		    padding: 10px 12px;
+		}
+
+		.table_box th {
+		    text-align: left;
+		    line-height: 40px;
+		}
+		.foot{
+			width: 100%;
+			position: absolute;
+			bottom:10px;
+			width:60%;
+			left:0;
+			right:0;
+			margin:0 auto;
+		}
+		.block{
+			text-align:center;
+			
+		}
+		.block span{
+			padding:0 15px;
+			font-size:14px;
+			color:#696969;
+		}
+		.TEXTEDITB {
+			height: 25px;
+			width: 200px;
+			font-size: 16px;
+			color: #333;
+			font-style: normal;
+			text-align: left;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+<body>
+<div class="contrainer">
+	<h1>郑州汉威光电情报板设置</h1>
+	<div class="left">
+		<ul>
+			<li><a href="index.shtml" >网络设置</a></li>
+			<li><a href="device.shtml">设备参数</a></li>
+			<li><a href="power.shtml" class="actived">电源设置</a></li>
+			<!-- <li><a href="sceen.shtml">屏幕自检</a></li> -->
+		</ul>
+	</div>
+	<div class="right">
+		<div class="main">
+			<h2>电源设置</h2>
+			<form action="beep.cgi?power=1" method="get">
+				<table width="100%" height="50" border="1" class="table_box">
+					<tr align="center" valign="middle">
+						<input type="hidden" name="power" value="1" />
+						<td><input type="submit" value="重新启动" /></td>
+					</tr>
+				</table>
+			</form>
+		<div class="foot">
+			<div class="block">
+				网页版本:<span>V.1.1</span> 主控版本:<span><!--#z--></span>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

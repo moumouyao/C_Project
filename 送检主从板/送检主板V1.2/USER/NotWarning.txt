@@ -1,0 +1,27 @@
+dis_app.h
+key.c 包含了dis_app.h   消除了 UpdataItemToslaves()函数的隐式声明警告(key.c的36行)
+i2c.h 包含了delay.h 消除了Dealy()函数的隐式声明
+在RTC.c中 RCC_RTCCLKCmd函数的参数做了做了强制类型转换
+消除了power.c中包含了wdg.h 消除了 IWDG_Feed()函数的隐式声明
+消除了ds18b20文件中的延迟函数警告
+消除了 user_tim3_pwm.c中 229行 BrightValue变量的无意义比较 < 改为<=
+消除了sw_host.c文件中118行 max_bright_proportion的无意义比较  <改为<=
+
+
+修改:2022/4/17
+方案一：
+添加了敏感词检测。
+检测原理：拦截TCP通讯任务中的队列数据  CtrlCentRecMsgQeue->数据处理任务->数据处理任务给TCP通讯反馈
+
+修改为:TCP数据通过 TestQueue队列将数据传输给检测任务-->检测任务分析是否是文本-->是文本-->检测和修改文本数据-->通过CtrlCentRecMsgQeue回传给数据处理任务
+																			 -->不是文本________________________________|
+
+将其修改为 CtrlCentRecMsgQeue->关键词检测->关键词首先检测是否是文本信息->是文本信息->开始检测->检测出
+                                                                       ->不是文本信息->发给数据处理任务.
+																	   
+修改:2023/6/19
+问题：洛阳使用半年出现问题 
+
+
+解决方法：
+释放pbuf的时候释放错了。。。。。。。。。。
